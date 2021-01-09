@@ -19,10 +19,11 @@ this is a little bit convert version from <a href="https://github.com/mdipierro/
 ```
     1. composer install.
     2. cp .env.example .env (Root).
-    3. Filling the env variable to your database.
-    4. php artisan migrat:refresh. (Root).
-    5. setting your web server to running this project (Nginx, LSWS, Apache, etc).
-    6. daemon the queue with `php artisan queue:listen`.
-    7. Run chmod command (777 or 775) to edit folder `bootstrap`, `storage`, `public`. (Root).
-    8. Run `php artisan optimize:clear`. (Root).
+    3. Run `php artisan key:generate`
+    4. Filling the env variable to your database.
+    5. php artisan migrat:refresh. (Root).
+    6. setting your web server to running this project (Nginx, LSWS, Apache, etc).
+    7. daemon the queue with `php artisan queue:listen`.
+    8. Run chmod command (777 or 775) to edit folder `bootstrap`, `storage`, `public`. (Root).
+    9. Run `php artisan optimize:clear`. (Root).
 ```
