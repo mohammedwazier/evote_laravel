@@ -16,11 +16,47 @@ use App\Models\AuthUser;
 use App\Models\Elections;
 use App\Models\Voter;
 use App\Models\Ballot;
+use App\Models\ShortLink;
 
 use DB;
 
 class DashboardController extends Controller
 {
+
+    public function generateUUID(){
+        return sprintf('%04x%04x%04x%04x%04x%04x%04x%04x',
+        // 32 bits for "time_low"
+        mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+        // 16 bits for "time_mid"
+        mt_rand(0, 0xffff),
+        // 16 bits for "time_hi_and_version",
+        // four most significant bits holds version number 4
+        mt_rand(0, 0x0fff) | 0x4000,
+        // 16 bits, 8 bits for "clk_seq_hi_res",
+        // 8 bits for "clk_seq_low",
+        // two most significant bits holds zero and one for variant DCE1.1
+        mt_rand(0, 0x3fff) | 0x8000,
+        // 48 bits for "node"
+        mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+        );
+    }
+
+    public function saveLink($links){
+        $link = new ShortLink;
+        $link->link = $links;
+        $link->code = $this->generateUUID($link);
+        $link->save();
+        return route('redirect', ['code' => $link->code]);
+    }
+
+    public function redirect(Request $req, $code){
+        $find = ShortLink::where('code', $code)->first();
+        if($find){
+            return redirect($find->link);
+        }else{
+            return redirect()->route('homepage.login')->with(['message' => 'No Links available', 'icon' => 'success']);
+        }
+    }
 
     protected $key;
     public function __construct(){
@@ -131,12 +167,16 @@ class DashboardController extends Controller
                 $ballot->signature = $this->enc($ballot->election_id."_".$voter->voter_uuid);
                 $ballot->save();
 
+                // Shorten the Link
+                $voteLink = $this->saveLink(route('dashboard.vote.vote', ['id' => base64_encode($uuid), 'key' => base64_encode($ballot->signature)]));
+                $ballotLink = $this->saveLink(route('ballot.details', ['id' => base64_encode($uuid), 'ballot_uid' => $ballot->ballot_uuid]));
+                $resultLink = $this->saveLink(route('election.result', ['id' => base64_encode($uuid)]));
                 // Sending Email
                 $body = $election->vote_email;
                 $body = str_replace("{=title}", $election->title, $body);
-                $body = str_replace("{=link}", route('dashboard.vote.vote', ['id' => base64_encode($uuid), 'key' => base64_encode($ballot->signature)]), $body);
-                $body = str_replace("{=link_ballots}", route('ballot.details', ['id' => base64_encode($uuid), 'ballot_uid' => $ballot->ballot_uuid]), $body);
-                $body = str_replace("{=link_results}", route('election.result', ['id' => base64_encode($uuid)]), $body);
+                $body = str_replace("{=link}", $voteLink, $body);
+                $body = str_replace("{=link_ballots}", $ballotLink, $body);
+                $body = str_replace("{=link_results}", $resultLink, $body);
                 $dataEmail = [
                     "email" => $voter->email,
                     "title" => $election->title,

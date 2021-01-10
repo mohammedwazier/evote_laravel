@@ -12,12 +12,39 @@ use Carbon\Carbon;
 use Session;
 
 use App\Models\AuthUser;
+use App\Models\ShortLink;
 
 
 class HomepageController extends Controller
 {
     public function index(){
         return view('pages.login');
+    }
+
+    public function generateUUID(){
+        return sprintf('%04x%04x%04x%04x%04x%04x%04x%04x',
+        // 32 bits for "time_low"
+        mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+        // 16 bits for "time_mid"
+        mt_rand(0, 0xffff),
+        // 16 bits for "time_hi_and_version",
+        // four most significant bits holds version number 4
+        mt_rand(0, 0x0fff) | 0x4000,
+        // 16 bits, 8 bits for "clk_seq_hi_res",
+        // 8 bits for "clk_seq_low",
+        // two most significant bits holds zero and one for variant DCE1.1
+        mt_rand(0, 0x3fff) | 0x8000,
+        // 48 bits for "node"
+        mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+        );
+    }
+
+    public function saveLink($links){
+        $link = new ShortLink;
+        $link->link = $links;
+        $link->code = $this->generateUUID($link);
+        $link->save();
+        return route('redirect', ['code' => $link->code]);
     }
 
     public function loginProcess(Request $req){
@@ -66,7 +93,7 @@ class HomepageController extends Controller
         $user->registration_password_key = md5($raw);
 
         $title = "Registration Evote";
-        $encode = route('homepage.verification', ['key' => base64_encode($raw)]);
+        $encode = $this->saveLink(route('homepage.verification', ['key' => base64_encode($raw)]));
         $body = "Link to Verification Registration : {$encode}";
 
         $data = [

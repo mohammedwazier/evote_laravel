@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVoterTable extends Migration
+class CreateShortlinkTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,10 @@ class CreateVoterTable extends Migration
      */
     public function up()
     {
-        Schema::create('voter', function (Blueprint $table) {
+        Schema::create('shortlink', function (Blueprint $table) {
             $table->id();
-            $table->longText('voter_uuid');
-            $table->longText('election_id');
-            $table->string('email');
-            $table->string('voted');
-            $table->timestamp('invited_on');
+            $table->longText('link');
+            $table->string('code');
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ class CreateVoterTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('voter');
+        Schema::dropIfExists('shortlink');
     }
 }

@@ -50,3 +50,4 @@ Route::get('/election/ballots/{id}', 'DashboardController@viewBallot')->name('ba
 Route::get('/election/ballot/{id}/detail/{ballot_uid}', 'DashboardController@detailBallot')->name('ballot.details');
 Route::get('/election/results/{id}', 'DashboardController@electionResult')->name('election.result');
 
+Route::get('/redirect/{code}', 'DashboardController@redirect')->name('redirect');
