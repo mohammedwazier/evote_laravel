@@ -149,6 +149,7 @@ class DashboardController extends Controller
             return redirect()->route('dashboard.index')->with(['message' => 'Success Create Election', 'icon' => 'success']);
 
         }catch(\Exception $e){
+            dd($e);
             DB::rollback();
             return redirect()->back()->with(['message' => 'Failed Create Election', 'icon' => 'error']);
         }
@@ -238,12 +239,30 @@ class DashboardController extends Controller
         $id_bal = base64_decode($id);
         $election = Elections::where('private_key', 'LIKE', "%{$id_bal}%")->first();
         if($election){
-            // $election->is_active = "1";
-            // $election->save();
-            // return redirect()->back()->with(['message' => "Success Starting Election {$election->title}", 'icon' => 'success']);
+            dd($election);
         }else{
             return redirect()->back()->with(['message' => "Election Not Found", 'icon' => 'error']);
         }
+    }
+
+    public function deleteElection(Request $req, $id){
+        $id_bal = base64_decode($id);
+        try{
+            $election = Elections::where('private_key', 'LIKE', "%{$id_bal}%")->first();
+            $ballot = Ballot::where('election_id', $election->public_key)->get();
+            foreach($ballot as $key => $val){
+                $sign = explode("_",$this->dec($val->signature));
+                $voter = Voter::where('voter_uuid', $sign[1])->first();
+                // Delete Voter & Ballot
+                $val->delete();
+                $voter->delete();
+            }
+            $election->delete();
+            return redirect()->back()->with(['message' => 'Success Delete Election', 'icon' => 'success']);
+        }catch(\Exception $e){
+            return redirect()->back()->with(['message' => 'Election Not Found', 'icon' => 'error']);
+        }
+        // dd($election);
     }
 
     public function startElection(Request $req, $id){
