@@ -81,6 +81,7 @@ class HomepageController extends Controller
         $user->last_name = htmlspecialchars($req->lastname);
         $user->email = htmlspecialchars($req->email);
         $user->password = Hash::make($req->password);
+        $user->no_ktp = htmlspecialchars($req->no_ktp);
         if($req->manager){
             $user->is_manager = 1;
         }else{

@@ -114,7 +114,8 @@ class DashboardController extends Controller
         $uuid = Uuid::uuid1();
         $ballot_model = [
             'key' => $uuid,
-            'answer' => $req->question
+            'answer' => $req->question,
+            'description' => $req->ballot_description
         ];
         $counter = [];
 
@@ -279,7 +280,9 @@ class DashboardController extends Controller
         $id_bal = base64_decode($id);
         $election = Elections::where('private_key', 'LIKE', "%{$id_bal}%")->first();
         if($election){
-            dd($election);
+            $user = AuthUser::where('verified', 'true')->get();
+            // dd($election);
+            return view('pages.election_edit', ['user' => $user, 'data' => $election]);
         }else{
             return redirect()->back()->with(['message' => "Election Not Found", 'icon' => 'error']);
         }
@@ -316,6 +319,19 @@ class DashboardController extends Controller
             return redirect()->back()->with(['message' => "Election Not Found", 'icon' => 'error']);
         }
     }
+
+    // public function editElection(Request $req, $id){
+    //     $id_bal = base64_decode($id);
+    //     $election = Elections::where('private_key', 'LIKE', "%{$id_bal}%")->first();
+    //     dd($election);
+    //     if($election){
+    //         // $election->is_active = "1";
+    //         // $election->save();
+    //         return redirect()->back()->with(['message' => "Success Starting Election {$election->title}", 'icon' => 'success']);
+    //     }else{
+    //         return redirect()->back()->with(['message' => "Election Not Found", 'icon' => 'error']);
+    //     }
+    // }
 
     public function closeElection(Request $req, $id){
         $id_bal = base64_decode($id);

@@ -25,7 +25,7 @@
                                     <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown">  Action  </a>
                                     <ul class="dropdown-menu">
                                         @if($val->closed === '0')
-                                            <li><a class="dropdown-item" href="#"> Edit Election</a></li>
+                                            <li><a class="dropdown-item" href="{{ route('dashboard.election.edit', ['id' => $id_election]) }}"> Edit Election</a></li>
                                             @if($val->is_active === '0')
                                                 <li><a class="dropdown-item" href="{{ route('dashboard.election.start', ['id' => $id_election]) }}"> Start Election </a></li>
                                             @endif
