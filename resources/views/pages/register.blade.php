@@ -14,14 +14,14 @@
         <label for="inputFirstName">First Name</label>
     </div>
 
-    <div class="form-label-group">
-        <input type="text" name="no_ktp" onkeypress="return onlyNumberKey(event)" id="inputKtp" class="form-control" placeholder="Nomor KTP" required>
-        <label for="inputKtp">Identification Number</label>
-    </div>
-
     <div class="form-label-group position-relative">
         <input type="text" name="lastname" id="inputLastName" class="form-control" placeholder="Last Name" required="">
         <label for="inputLastName">Last Name</label>
+    </div>
+
+    <div class="form-label-group">
+        <input type="text" name="no_ktp" onkeypress="return onlyNumberKey(event)" id="inputKtp" class="form-control" placeholder="Nomor KTP" required>
+        <label for="inputKtp">Identification Number</label>
     </div>
 
     <div class="form-label-group">
