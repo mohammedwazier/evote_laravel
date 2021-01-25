@@ -20,8 +20,8 @@
     </div>
 
     <div class="form-label-group">
-        <input type="text" name="no_ktp" onkeypress="return onlyNumberKey(event)" id="inputKtp" class="form-control" placeholder="Nomor KTP" required>
-        <label for="inputKtp">Identification Number</label>
+        <input type="text" name="no_ktp" onkeypress="return onlyNumberKey(event)" id="inputKtp" class="form-control" placeholder="ID Number" required>
+        <label for="inputKtp">ID Number</label>
     </div>
 
     <div class="form-label-group">
