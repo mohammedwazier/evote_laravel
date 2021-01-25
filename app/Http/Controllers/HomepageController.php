@@ -95,7 +95,7 @@ class HomepageController extends Controller
 
         $title = "Registration Evote";
         $encode = $this->saveLink(route('homepage.verification', ['key' => base64_encode($raw)]));
-        $body = "Link to Verification Registration : <a href='{$encode}'>Link</a>";
+        $body = "Link to Verification Registration : {$encode}";
 
         $data = [
             "email" => $req->email,
