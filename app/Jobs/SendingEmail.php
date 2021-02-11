@@ -38,6 +38,7 @@ class SendingEmail implements ShouldQueue
         $emailStore->to = $this->details['email'];
         $emailStore->title = $this->details['title'];
         $emailStore->body = $this->details['body'];
+        $emailStore->status = 'false';
         $emailStore->save();
         $sends = Mail::raw($this->details['body'], function($message){
             $message->to($this->details['email']);
