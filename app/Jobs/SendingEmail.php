@@ -44,10 +44,10 @@ class SendingEmail implements ShouldQueue
             $message->subject($this->details['title']);
         });
 
-        if(Mail::failures()){
-            $emailStore->status ='false';
-            $emailStore->save();
-        }
+        // if(Mail::failures()){
+        //     $emailStore->status ='false';
+        //     $emailStore->save();
+        // }
 
         $emailStore->updated_at = Carbon::now('Asia/Jakarta');
         $emailStore->save();
