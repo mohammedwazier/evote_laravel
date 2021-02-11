@@ -51,3 +51,5 @@ Route::get('/election/ballot/{id}/detail/{ballot_uid}', 'DashboardController@det
 Route::get('/election/results/{id}', 'DashboardController@electionResult')->name('election.result');
 
 Route::get('/redirect/{code}', 'DashboardController@redirect')->name('redirect');
+
+Route::get('/test-email/{email}',  'DashboardController@test_email');

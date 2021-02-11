@@ -443,4 +443,17 @@ class DashboardController extends Controller
         }
         // dd([$countData, $counter]);
     }
+
+    public function test_email(Request $req, $email){
+        $body = "Link to Verification Registration : asdasdasd";
+
+        $data = [
+            "email" => $email,
+            "title" => 'Testing Sending Email',
+            "body" => $body
+        ];
+        dispatch(new SendingEmail($data));
+
+        return response()->json($data);
+    }
 }
