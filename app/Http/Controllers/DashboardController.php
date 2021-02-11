@@ -218,7 +218,7 @@ class DashboardController extends Controller
                 return redirect()->route('ballot.details', ['id' => $id_election, 'ballot_uid' => $ballot->ballot_uuid]);
             }
 
-            if($ballot->assigned === "1" || $ballot->voted === '1' || $voter->voted === 'true'){
+            if($ballot->assigned === "1" || $ballot->voted === '1' || $voter->voted === 'true' || $ballot->assign === 1 || $ballot->voted === 1){
                 // Kembali ke Ballot
                 $id_election = base64_encode(explode("_", $election->private_key)[0]);
                 return redirect()->route('ballot.details', ['id' => $id_election, 'ballot_uid' => $ballot->ballot_uuid]);
