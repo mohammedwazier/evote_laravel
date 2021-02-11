@@ -39,7 +39,7 @@ class SendingEmail implements ShouldQueue
         $emailStore->title = $this->details['title'];
         $emailStore->body = $this->details['body'];
         $emailStore->save();
-        Mail::raw($this->details['body'], function($message){
+        $sends = Mail::raw($this->details['body'], function($message){
             $message->to($this->details['email']);
             $message->subject($this->details['title']);
         });
@@ -51,5 +51,6 @@ class SendingEmail implements ShouldQueue
 
         $emailStore->updated_at = Carbon::now('Asia/Jakarta');
         $emailStore->save();
+        print_r($sends);
     }
 }

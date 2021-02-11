@@ -9,6 +9,8 @@ use App\Jobs\SendingEmail;
 use Hash;
 use Ramsey\Uuid\Uuid;
 
+use Illuminate\Support\Facades\Mail;
+
 use Carbon\Carbon;
 use Session;
 
@@ -452,8 +454,25 @@ class DashboardController extends Controller
             "title" => 'Testing Sending Email',
             "body" => $body
         ];
-        dispatch(new SendingEmail($data));
 
-        return response()->json($data);
+        $this->datas = $data;
+        // dispatch(new SendingEmail($data));
+
+        $sends = Mail::raw($data['body'], function($message){
+            $message->to($this->datas['email']);
+            $message->subject($this->datas['title']);
+        });
+
+        if( count(Mail::failures()) > 0 ) {
+
+            echo "There was one or more failures. They were: <br />";
+            foreach(Mail::failures as $email_address) {
+                echo " - $email_address <br />";
+            }
+        } else {
+            echo "No errors, all sent successfully!";
+        }
+
+        // return response()->json([$data, $sends]);
     }
 }
